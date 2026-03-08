@@ -1,8 +1,12 @@
 "use client";
 import React, { useState, useRef, useEffect } from "react";
+import { useAuth } from "../context/AuthContext";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function Header() {
-    const [profileName,setProfileName] = useState("John Doe");
+    const { user, logout } = useAuth();
+    const router = useRouter();
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -24,55 +28,77 @@ export default function Header() {
         };
     }, [dropdownOpen]);
 
+    const getRoleBadge = (role: string) => {
+        const colors: Record<string, string> = {
+            CITIZEN: "bg-emerald-500/20 text-emerald-300 border-emerald-500/30",
+            OFFICIAL: "bg-blue-500/20 text-blue-300 border-blue-500/30",
+            ADMIN: "bg-purple-500/20 text-purple-300 border-purple-500/30",
+        };
+        return colors[role] || colors.CITIZEN;
+    };
+
     return (
-        <nav className="w-full py-4 px-8 bg-white shadow flex items-center justify-between">
-            <span className="text-2xl font-bold text-gray-800 tracking-wide">
-                LOK App
-            </span>
-            <div className="relative" ref={dropdownRef}>
-                <button
-                    className="flex items-center gap-2 text-gray-700 font-medium text-lg px-4 py-2 rounded hover:bg-gray-100 transition"
-                    onClick={() => setDropdownOpen((open) => !open)}
-                >
-                    <span>{profileName}</span>
-                    <svg
-                        className={`w-4 h-4 transition-transform ${dropdownOpen ? "rotate-180" : ""
-                            }`}
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth={2}
-                        viewBox="0 0 24 24"
+        <nav className="w-full py-4 px-8 bg-white/5 backdrop-blur-xl border-b border-white/10 flex items-center justify-between">
+            <Link href="/" className="text-2xl font-extrabold text-white tracking-tight">
+                LOK<span className="text-amber-400">App</span>
+            </Link>
+
+            {user && (
+                <div className="relative" ref={dropdownRef}>
+                    <button
+                        className="flex items-center gap-3 text-white font-medium px-4 py-2 rounded-xl hover:bg-white/10 transition"
+                        onClick={() => setDropdownOpen((open) => !open)}
                     >
-                        <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M19 9l-7 7-7-7"
-                        />
-                    </svg>
-                </button>
-                {dropdownOpen && (
-                    <div className="absolute right-0 mt-2 w-44 bg-white border border-gray-200 rounded shadow-lg z-10">
-                        <button
-                            className="w-full text-left px-4 py-3 hover:bg-amber-100 text-gray-800 transition"
-                            onClick={() => {
-                                setDropdownOpen(false);
-                                // handle view profile
-                            }}
+                        {/* Avatar circle */}
+                        <div className="w-8 h-8 rounded-full bg-amber-500 flex items-center justify-center text-slate-900 font-bold text-sm">
+                            {user.name.charAt(0).toUpperCase()}
+                        </div>
+                        <span className="hidden sm:inline">{user.name}</span>
+                        <span
+                            className={`text-xs px-2 py-0.5 rounded-full border ${getRoleBadge(user.role)} hidden sm:inline`}
                         >
-                            View Profile
-                        </button>
-                        <button
-                            className="w-full text-left px-4 py-3 hover:bg-red-100 text-red-600 transition border-t border-gray-100"
-                            onClick={() => {
-                                setDropdownOpen(false);
-                                // handle logout
-                            }}
+                            {user.role}
+                        </span>
+                        <svg
+                            className={`w-4 h-4 transition-transform ${dropdownOpen ? "rotate-180" : ""}`}
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth={2}
+                            viewBox="0 0 24 24"
                         >
-                            Logout
-                        </button>
-                    </div>
-                )}
-            </div>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </button>
+
+                    {dropdownOpen && (
+                        <div className="absolute right-0 mt-2 w-52 bg-slate-800 border border-white/20 rounded-xl shadow-2xl z-50 overflow-hidden">
+                            <div className="px-4 py-3 border-b border-white/10">
+                                <p className="text-white font-medium text-sm">{user.name}</p>
+                                <p className="text-slate-400 text-xs">{user.email}</p>
+                            </div>
+                            <button
+                                className="w-full text-left px-4 py-3 hover:bg-white/10 text-slate-300 transition text-sm"
+                                onClick={() => {
+                                    setDropdownOpen(false);
+                                    router.push("/profile");
+                                }}
+                            >
+                                👤 View Profile
+                            </button>
+                            <button
+                                className="w-full text-left px-4 py-3 hover:bg-red-500/20 text-red-400 transition text-sm border-t border-white/10"
+                                onClick={() => {
+                                    setDropdownOpen(false);
+                                    logout();
+                                    router.push("/login");
+                                }}
+                            >
+                                🚪 Logout
+                            </button>
+                        </div>
+                    )}
+                </div>
+            )}
         </nav>
     );
 }

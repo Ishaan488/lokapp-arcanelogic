@@ -1,6 +1,5 @@
 "use client";
 import React, { useRef, useState, useEffect } from "react";
-import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 
 export default function Newreport() {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -11,8 +10,8 @@ export default function Newreport() {
 
   useEffect(() => {
     // Request camera access on mount
-    setLoading(true);
     async function getCamera() {
+      console.log("Requesting camera...");
       try {
         const stream = await navigator.mediaDevices.getUserMedia({
           video: { facingMode: "environment" },
@@ -22,9 +21,13 @@ export default function Newreport() {
         }
       } catch (err) {
         alert("Could not access camera.");
+        // setLoading(false);
+        console.error(err);
       }
     }
     getCamera();
+    // setTimeout(() => setLoading(false), 1000);
+    console.log("Camera setup complete.");
     // Cleanup: stop camera on unmount
     return () => {
       if (videoRef.current && videoRef.current.srcObject) {
@@ -32,7 +35,7 @@ export default function Newreport() {
           .getTracks()
           .forEach((track) => track.stop());
       }
-      setLoading(false);
+      // setLoading(false);
     };
   }, []);
 
@@ -74,7 +77,7 @@ export default function Newreport() {
   const [transcript, setTranscript] = useState('');
   const [isListening, setIsListening] = useState(false);
   const [error, setError] = useState('');
-  const [recognition, setRecognition] = useState(null);
+  const [recognition, setRecognition] = useState<any>(null);
 
   useEffect(() => {
     // Check if the browser supports Speech Recognition API
@@ -106,14 +109,14 @@ export default function Newreport() {
         setIsListening(false);
       };
 
-      recognitionInstance.onresult = (event) => {
+      recognitionInstance.onresult = (event: any) => {
         const latestTranscript =
           event.results[event.results.length - 1][0].transcript;
         console.log('Listened:', latestTranscript);
         setTranscript(latestTranscript);
       };
 
-      recognitionInstance.onerror = (event) => {
+      recognitionInstance.onerror = (event: any) => {
         console.error('Speech Recognition error:', event.error);
         setError(`Error: ${event.error}`);
       };
@@ -144,6 +147,12 @@ export default function Newreport() {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center px-4">
       <div className="bg-white rounded shadow p-6 flex flex-col items-center gap-4 w-full max-w-md">
+        {/* {loading ? (
+          <div className="flex flex-col items-center justify-center py-16">
+            <div className="w-12 h-12 border-4 border-amber-400 border-t-transparent rounded-full animate-spin mb-4"></div>
+            <span className="text-gray-600 text-lg">Loading camera...</span>
+          </div> */}
+        {/* ): */}
         {!capturedImage ? (
           <>
             <video
