@@ -2,10 +2,12 @@ const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
 
 interface ApiOptions {
     method?: string;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     body?: any;
     headers?: Record<string, string>;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function apiFetch<T = any>(endpoint: string, options: ApiOptions = {}): Promise<T> {
     const { method = 'GET', body, headers = {} } = options;
 

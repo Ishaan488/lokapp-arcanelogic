@@ -34,39 +34,43 @@ export default function SignupPage() {
         try {
             await signup(email, password, name, phone || undefined);
             router.push("/");
-        } catch (err: any) {
-            setError(err.message || "Signup failed. Please try again.");
+        } catch (err: unknown) {
+            if (err instanceof Error) {
+                setError(err.message || "Signup failed. Please try again.");
+            } else {
+                setError("Signup failed. Please try again.");
+            }
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 px-4 py-8">
+        <div className="min-h-screen flex items-center justify-center bg-zinc-950 px-4 py-8">
             <div className="w-full max-w-md">
                 {/* Logo */}
                 <div className="text-center mb-8">
-                    <h1 className="text-4xl font-extrabold text-white tracking-tight">
-                        LOK<span className="text-amber-400">App</span>
+                    <h1 className="text-4xl font-extrabold text-zinc-50 tracking-tight">
+                        LOKApp
                     </h1>
-                    <p className="text-slate-400 mt-2 text-sm">
+                    <p className="text-zinc-400 mt-2 text-sm">
                         Join the movement for better civic governance.
                     </p>
                 </div>
 
                 {/* Card */}
-                <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl p-8 shadow-2xl">
-                    <h2 className="text-2xl font-bold text-white mb-6">Create account</h2>
+                <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-8 shadow-sm">
+                    <h2 className="text-2xl font-bold text-zinc-50 mb-6">Create account</h2>
 
                     {error && (
-                        <div className="mb-4 p-3 bg-red-500/20 border border-red-500/40 rounded-lg text-red-300 text-sm">
+                        <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-600 text-sm">
                             {error}
                         </div>
                     )}
 
                     <form onSubmit={handleSubmit} className="space-y-4">
                         <div>
-                            <label className="block text-sm font-medium text-slate-300 mb-1.5">
+                            <label className="block text-sm font-medium text-zinc-300 mb-1.5">
                                 Full Name
                             </label>
                             <input
@@ -75,13 +79,13 @@ export default function SignupPage() {
                                 required
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
-                                className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-400/60 focus:border-transparent transition"
+                                className="w-full px-4 py-3 rounded-xl bg-zinc-950 border border-zinc-800 text-zinc-50 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-zinc-700 focus:border-transparent transition"
                                 placeholder="John Doe"
                             />
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-slate-300 mb-1.5">
+                            <label className="block text-sm font-medium text-zinc-300 mb-1.5">
                                 Email
                             </label>
                             <input
@@ -90,27 +94,27 @@ export default function SignupPage() {
                                 required
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
-                                className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-400/60 focus:border-transparent transition"
+                                className="w-full px-4 py-3 rounded-xl bg-zinc-950 border border-zinc-800 text-zinc-50 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-zinc-700 focus:border-transparent transition"
                                 placeholder="you@example.com"
                             />
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-slate-300 mb-1.5">
-                                Phone <span className="text-slate-500">(optional)</span>
+                            <label className="block text-sm font-medium text-zinc-300 mb-1.5">
+                                Phone <span className="text-zinc-500">(optional)</span>
                             </label>
                             <input
                                 id="signup-phone"
                                 type="tel"
                                 value={phone}
                                 onChange={(e) => setPhone(e.target.value)}
-                                className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-400/60 focus:border-transparent transition"
+                                className="w-full px-4 py-3 rounded-xl bg-zinc-950 border border-zinc-800 text-zinc-50 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-zinc-700 focus:border-transparent transition"
                                 placeholder="9876543210"
                             />
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-slate-300 mb-1.5">
+                            <label className="block text-sm font-medium text-zinc-300 mb-1.5">
                                 Password
                             </label>
                             <input
@@ -119,13 +123,13 @@ export default function SignupPage() {
                                 required
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
-                                className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-400/60 focus:border-transparent transition"
+                                className="w-full px-4 py-3 rounded-xl bg-zinc-950 border border-zinc-800 text-zinc-50 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-zinc-700 focus:border-transparent transition"
                                 placeholder="••••••••"
                             />
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-slate-300 mb-1.5">
+                            <label className="block text-sm font-medium text-zinc-300 mb-1.5">
                                 Confirm Password
                             </label>
                             <input
@@ -134,7 +138,7 @@ export default function SignupPage() {
                                 required
                                 value={confirmPassword}
                                 onChange={(e) => setConfirmPassword(e.target.value)}
-                                className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-400/60 focus:border-transparent transition"
+                                className="w-full px-4 py-3 rounded-xl bg-zinc-950 border border-zinc-800 text-zinc-50 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-zinc-700 focus:border-transparent transition"
                                 placeholder="••••••••"
                             />
                         </div>
@@ -143,7 +147,7 @@ export default function SignupPage() {
                             id="signup-submit"
                             type="submit"
                             disabled={loading}
-                            className="w-full py-3 px-4 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-900 font-bold text-lg shadow-lg shadow-amber-500/25 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed mt-2"
+                            className="w-full py-3 px-4 rounded-xl bg-zinc-50 hover:bg-zinc-200 text-zinc-950 font-medium text-lg shadow-sm transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed mt-2"
                         >
                             {loading ? (
                                 <span className="flex items-center justify-center gap-2">
@@ -160,11 +164,11 @@ export default function SignupPage() {
                     </form>
 
                     <div className="mt-6 text-center">
-                        <p className="text-slate-400 text-sm">
+                        <p className="text-zinc-400 text-sm">
                             Already have an account?{" "}
                             <Link
                                 href="/login"
-                                className="text-amber-400 hover:text-amber-300 font-medium transition"
+                                className="text-zinc-50 hover:text-zinc-300 font-medium transition-colors"
                             >
                                 Sign in
                             </Link>

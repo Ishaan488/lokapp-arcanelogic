@@ -22,7 +22,7 @@ export interface Report {
     department_id: string | null;
     status: 'PENDING' | 'ACKNOWLEDGED' | 'IN_PROGRESS' | 'RESOLVED' | 'ESCALATED';
     severity: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
-    ai_analysis: any;
+    ai_analysis: unknown;
     upvote_count: number;
     etr: string | null;
     created_at: string;

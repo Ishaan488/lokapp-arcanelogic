@@ -77,6 +77,7 @@ export default function Newreport() {
   const [transcript, setTranscript] = useState('');
   const [isListening, setIsListening] = useState(false);
   const [error, setError] = useState('');
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [recognition, setRecognition] = useState<any>(null);
 
   useEffect(() => {
@@ -109,6 +110,7 @@ export default function Newreport() {
         setIsListening(false);
       };
 
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       recognitionInstance.onresult = (event: any) => {
         const latestTranscript =
           event.results[event.results.length - 1][0].transcript;
@@ -116,6 +118,7 @@ export default function Newreport() {
         setTranscript(latestTranscript);
       };
 
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       recognitionInstance.onerror = (event: any) => {
         console.error('Speech Recognition error:', event.error);
         setError(`Error: ${event.error}`);
@@ -145,8 +148,8 @@ export default function Newreport() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center px-4">
-      <div className="bg-white rounded shadow p-6 flex flex-col items-center gap-4 w-full max-w-md">
+    <div className="min-h-screen bg-zinc-950 flex flex-col items-center justify-center px-4">
+      <div className="bg-zinc-900 rounded-xl shadow border border-zinc-800 p-6 flex flex-col items-center gap-4 w-full max-w-md">
         {/* {loading ? (
           <div className="flex flex-col items-center justify-center py-16">
             <div className="w-12 h-12 border-4 border-amber-400 border-t-transparent rounded-full animate-spin mb-4"></div>
@@ -161,7 +164,7 @@ export default function Newreport() {
               playsInline
               width={400}
               height={300}
-              className="rounded bg-black"
+              className="rounded-xl bg-zinc-950 shadow-sm border border-zinc-800"
             />
             <canvas
               ref={canvasRef}
@@ -170,13 +173,13 @@ export default function Newreport() {
               style={{ display: "none" }}
             />
             <button
-              className="mt-4 px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded font-semibold text-lg transition"
+              className="mt-6 w-full px-6 py-3 bg-zinc-900 border border-zinc-700 hover:bg-zinc-800 text-zinc-50 rounded-lg font-medium text-lg transition-colors shadow-sm"
               onClick={() => { window.location.href = '/' }}
             >
               Go Back
             </button>
             <button
-              className="mt-4 px-6 py-3 bg-amber-500 hover:bg-amber-600 text-white rounded font-semibold text-lg transition"
+              className="mt-3 w-full px-6 py-3 bg-zinc-50 hover:bg-zinc-200 text-zinc-950 rounded-lg font-medium text-lg transition-colors shadow-sm"
               onClick={handleCapture}
             >
               Capture Image
@@ -187,34 +190,36 @@ export default function Newreport() {
             <img
               src={capturedImage}
               alt="Preview"
-              className="rounded w-full h-auto"
+              className="rounded-xl w-full h-auto shadow-sm"
             />
             <button
-              className="mt-2 px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded text-gray-700 text-sm"
+              className="mt-3 px-4 py-2 bg-zinc-900 border border-zinc-700 hover:bg-zinc-800 rounded-lg text-zinc-300 text-sm font-medium transition-colors"
               onClick={handleRetake}
             >
               Retake
             </button>
             <div className="w-full flex-col auto">
-              <div className="flex flex-row w-full">
+              <div className="flex flex-row w-full gap-2">
                 <input
                   type="text"
-                  className="mt-4 w-full px-3 py-2 border rounded text-gray-700"
+                  className="mt-4 w-full px-4 py-2 bg-zinc-950 border border-zinc-700 rounded-lg text-zinc-50 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-zinc-600 transition-shadow"
                   placeholder="Enter description..."
                   value={transcript || description}
                   onChange={(e) => setDescription(e.target.value)}
                 />
-                <button className="mt-4 px-6 py-3 bg-gray-500 hover:bg-gray-600 text-white rounded font-semibold text-lg transition w-20px" onClick={() => { setDescription(""); setTranscript(""); }}>Clear</button></div>
-              <button className="mt-4 px-6 py-3 bg-gray-500 hover:bg-gray-600 text-white rounded font-semibold text-lg transition w-40px" onClick={startListening}>Audio</button>
-              <button className="mt-4 px-6 py-3 bg-red-500 hover:bg-red-600 text-white rounded font-semibold text-lg transition w-40px" onClick={stopListening}>Stop</button>
+                <button className="mt-4 px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-lg font-medium transition-colors" onClick={() => { setDescription(""); setTranscript(""); }}>Clear</button></div>
+              <div className="flex gap-2 w-full">
+                <button className="mt-4 flex-1 px-6 py-3 bg-zinc-900 border border-zinc-700 hover:bg-zinc-800 text-zinc-50 rounded-lg font-medium transition-colors shadow-sm" onClick={startListening}>🎙️ Listen</button>
+                <button className="mt-4 flex-1 px-6 py-3 bg-red-950/30 border border-red-900/50 hover:bg-red-900/50 text-red-500 rounded-lg font-medium transition-colors shadow-sm" onClick={stopListening}>⏹️ Stop</button>
+              </div>
             </div>
-            {isListening ? (<p className="text-gray-600">Listening...</p>) : (<p className="text-red-600">Not listening</p>)}
-            {error && <p className="text-red-600">Error : {error}</p>}
+            {isListening ? (<p className="text-zinc-400 mt-2 text-sm flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span> Listening...</p>) : (<p className="text-zinc-500 mt-2 text-sm">Not listening</p>)}
+            {error && <p className="text-red-500 mt-2 text-sm">Error: {error}</p>}
             <button
-              className="mt-4 px-6 py-3 bg-amber-500 hover:bg-amber-600 text-white rounded font-semibold text-lg transition w-full"
+              className="mt-6 w-full px-6 py-3 bg-zinc-50 hover:bg-zinc-200 text-zinc-950 rounded-lg font-medium text-lg transition-colors shadow-sm"
               onClick={handleUpload}
             >
-              Upload
+              Upload Report
             </button>
           </>
         )}
